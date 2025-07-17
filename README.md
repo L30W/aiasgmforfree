@@ -1,5 +1,5 @@
 # AI as GM for Free
-by **Emptybelly**
+by **L30W**
 v. 1.0
 July 16, 2025
 Under CC BY-SA 4.0
