@@ -123,7 +123,7 @@ Use .rtf to keep the character's stats and little snippets of extra campaign inf
 
 Try to use .txt for your custom text that doesn't needs to be read constantly, I usually have my previous campaigns in a .txt file so the LLM GM knows what happened in previous adventures, .txt is the most compact and easily readable for the LLM, but not so pretty to read to human eyes.
 
-## ADVANCED KNOWLEDGE-CURATINGCURATING:
+## ADVANCED KNOWLEDGE-CURATING:
 
 It is all about 3 skills to develop: Format-Conversion, Compressing & Merging.
 
