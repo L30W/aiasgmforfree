@@ -1,8 +1,4 @@
-Of course. Here is the complete, modular tutorial formatted as a self-contained guide. You can copy and paste this entire text into a `.txt` or Markdown file for your personal records.
-
----
-
-# **Guide: Building a Tunable AI Game Master with Google Colab**
+# **Guide: Building a Tunable AI Game Master with Google Colab (Final Version)**
 
 This guide provides a complete, step-by-step process for creating a Retrieval-Augmented Generation (RAG) system using Google Colab. It allows you to use your own TTRPG books as a knowledge base for a tunable Gemini AI, creating a powerful and customized Game Master assistant for free.
 
@@ -18,7 +14,7 @@ This notebook is structured in a modular way for efficiency:
 1.  **Part 1: Initial Setup:** A one-time setup for each new session.
 2.  **Part 2: Document Processing:** A slow, one-time step that processes your PDF.
 3.  **Part 3: AI Tuning:** A fast, repeatable step where you'll customize the AI's personality.
-4.  **Part 4: Interactive Chat:** The final step to start talking to your AI GM.
+4.  **Part 4: Interactive Chat:** The final step to start talking to your AI GM, now with automatic word-wrapping for readability.
 
 The main advantage is that you can repeatedly tune the AI in Part 3 without having to re-process the PDF every time, making experimentation very fast.
 
@@ -114,16 +110,20 @@ llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-pro",
     google_api_key=userdata.get('GOOGLE_API_KEY'),
 
-    # temperature: Controls randomness.
-    # 0.0 = Strict, factual, rule-based.
-    # 0.7 = A balance of creative and factual.
-    # 1.0 = Highly creative, may invent details.
+    # --- TUNING OPTIONS (IMPORTANT: CHOOSE ONLY ONE) ---
+    # A) temperature: Controls randomness (0.0 = strict, 1.0 = creative).
     temperature=0.7,
 
-    # top_k: Narrows the model's choices to the most likely tokens.
+    # B) top_p: Selects from the most likely words based on a probability budget.
+    # It's often more intuitive than temperature. To use it, comment out the 'temperature'
+    # line above and uncomment the 'top_p' line below. A good value is 0.8 to 0.95.
+    # top_p=0.9,
+
+    # top_k: Narrows the model's choices to the top K most likely words.
     top_k=40,
 
-    # safety_settings: Adjust if responses about TTRPG themes are being blocked.
+    # safety_settings: Set to BLOCK_NONE to prevent the AI from being overly cautious
+    # about typical TTRPG themes like fantasy violence.
     safety_settings={
         HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
         HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -168,15 +168,17 @@ print("✅ RAG Chain is built and ready with your new settings.")
 
 ---
 
-## **Part 4: Interactive Chat**
+## **Part 4: Interactive Chat (with Word Wrap)**
 
-This final cell runs the chat interface. It will always use the latest version of the `rag_chain` you configured in Part 3.
+This final cell runs the chat interface. It includes the fix to automatically wrap long lines of text, making the AI's responses much easier to read.
 
 ### **Cell 3: Interactive Chat Loop**
 Copy this block into a new code cell and run it to start your conversation.
 
 ```python
-# --- Cell 3: Interactive Chat Loop ---
+# --- Cell 3: Interactive Chat Loop (with Word Wrap) ---
+
+from IPython.display import display, Markdown
 
 def start_chat():
   """
@@ -195,7 +197,10 @@ def start_chat():
 
       print("...Thinking...")
       response = rag_chain.invoke(question)
-      print("\nGame Master:", response)
+      
+      # This section now uses display(Markdown()) for proper word wrapping.
+      print("\nGame Master:")
+      display(Markdown(response))
 
     except (KeyboardInterrupt, EOFError):
       print("\nEnding chat session. Goodbye!")
@@ -211,6 +216,6 @@ start_chat()
 2.  **Chat:** Type questions into the prompt in Cell 3.
 3.  **To Tune the AI:**
     *   Go to Cell 2.
-    *   Change a parameter (like `temperature`).
+    *   Change a parameter (e.g., comment out `temperature` and uncomment `top_p`).
     *   Re-run **only Cell 2**.
-    *   Go back to Cell 3 and ask another question to see the change in personality. The chat will still be running.
+    *   Go back to Cell 3 and ask another question to see the change in personality. The chat will still be running and will use your new settings.
